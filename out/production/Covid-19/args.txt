@@ -1,0 +1,1 @@
+-estad -p_casos [n] -p_muertes [n] -casos_edad años -casos_cui [fecha]
