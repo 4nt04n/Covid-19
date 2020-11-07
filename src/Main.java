@@ -5,7 +5,7 @@ class Main {
 
     public static void main (String[] args) {
 
-        String nombreFichero = "Covid19Casos-10.csv";
+        String nombreFichero = "csv/Covid19Casos-10.csv";
         boolean llave=true;
         String id="";
         long TInicio, TFin, tiempo; //Variables para determinar el tiempo de ejecución
