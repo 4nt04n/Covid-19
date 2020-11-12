@@ -26,6 +26,7 @@ public class Persona {
     public String fechaDiagnostico;
     public String residenciaDepartamentoId;// INT
     public String ultimaActualizacion; //Fecha
+    public Persona siguiente=null;
 
     public Persona(String[] fila) {
         idEventoCaso=fila[0];
@@ -54,6 +55,9 @@ public class Persona {
         residenciaDepartamentoId=fila[23];
         ultimaActualizacion=fila[24];
 
+
+    }
+    public Persona(){
 
     }
 }

@@ -42,7 +42,7 @@ class Main {
                     count++;
                     id="";
                 }
-                if(caract==10)// si es salto de linea
+                if(caract==10)// si es salto de linea AGREGO PERSONA ENTERA
                 {
 
                     datAux[count]=id;  //Almaceno ultimo valor
@@ -51,7 +51,14 @@ class Main {
                     {
                         numMuertes++;
                         aux=Integer.parseInt(datAux[2]);
-                        if(aux<=10){
+                        for(int i =1;i<=10;i++){
+                            if(aux<=i*10 && aux>(i*10-10))
+                                muertesEdad[i-1]++;
+
+
+
+                        }
+                      /*  if(aux<=10){
                             muertesEdad[0]++;
 
                         }else if(aux<=20 && aux>10){
@@ -79,7 +86,7 @@ class Main {
                             muertesEdad[8]++;
                         }else if(aux<=100 && aux>90){
                             muertesEdad[9]++;
-                        }
+                        }*/
 
 
                     }
@@ -87,7 +94,14 @@ class Main {
                     if(datAux[20].equals("Confirmado")) //Cuento infectados
                     {  numInfect++;
                         aux=Integer.parseInt(datAux[2]);
-                        if(aux<=10){
+                        for(int i =1;i<=10;i++){
+                            if(aux<=i*10 && aux>(i*10-10))
+                                infectEdad[i-1]++;
+
+
+
+                        }
+                      /*  if(aux<=10){
                             infectEdad[0]++;
 
                         }else if(aux<=20 && aux>10){
@@ -115,7 +129,7 @@ class Main {
                             infectEdad[8]++;
                         }else if(aux<=100 && aux>90){
                             infectEdad[9]++;
-                        }
+                        }*/
 
 
 
@@ -195,17 +209,7 @@ class Main {
 
                     break;
                 case "-p_casos":
-                    if(args[i+1]==null || args[i+1]=="-p_muertes" ||args[i+1]=="-p_muertes"  )
-                    {
-                        //
-
-                        //
-                    }
-                    else{
-                        //  int n=Integer.parseInt(args[i+1]);
-
-                        //}
-                    }
+                   
                     break;
                 case "-p_muertes":
 

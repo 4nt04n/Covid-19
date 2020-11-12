@@ -6,7 +6,7 @@ import java.io.FileReader;
 public class Prueba {
 
     public static void main(String[] args) {
-      HashTable table=  new HashTable(1200);
+    //  HashTableProvincia table=  new HashTableProvincia(1200);
          Persona persona;
          String[] fila=null;
          int contador=0;
