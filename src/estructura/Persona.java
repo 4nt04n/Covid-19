@@ -2,9 +2,9 @@ package estructura;
 
 public class Persona {
     public String idEventoCaso;
-    public char sexo;
-    public int edad;
-    public boolean edadTipo; // 1 -> meses //// 0 -> anios
+    public String sexo;//CHAR
+    public String edad;//INT
+    public String edadTipo; // 1 -> meses //// 0 -> anios BOOLEAN
     public String residenciaPais;
     public String residenciaProvincia;
     public String residenciaDepartamento;
@@ -13,20 +13,46 @@ public class Persona {
     public String fechaApertura;
     public String sepiApertura;
     public String fechaInternacion;
-    public boolean cuidadoIntensivo; //Verdadero -> Estuvo en cuidado
+    public String cuidadoIntensivo; //Verdadero -> Estuvo en cuidado BOOLEAN
     public String fechaCuidadoIntensivo;
-    public boolean fallecido; //Verdadero->Muerto
+    public String fallecido; //Verdadero->Muerto BOOLEAN
     public String fechaFallecimiento;
-    public boolean asistenciaRespiratoriaMecanica; //Verdadero-> Tuvo asistencia
-    public int cargaProvinciaId;
-    public boolean origenFinanciamiento; //Verdadero-> Tenia obra social
+    public String asistenciaRespiratoriaMecanica; //Verdadero-> Tuvo asistencia BOOLEAN
+    public String cargaProvinciaId; // INT
+    public String origenFinanciamiento; //Verdadero-> Tenia obra social BOOLEAN
     public String clasificacion;
     public String clasificacionResumen;
-    public int residenciaProvinciaId;
+    public String residenciaProvinciaId; //INT
     public String fechaDiagnostico;
-    public int residenciaDepartamentoId;
+    public String residenciaDepartamentoId;// INT
     public String ultimaActualizacion; //Fecha
-    public Persona(String[] fila){
+
+    public Persona(String[] fila) {
+        idEventoCaso=fila[0];
+        sexo=fila[1];
+        edad=fila[2];
+        edadTipo=fila[3];
+        residenciaPais=fila[4];
+        residenciaProvincia=fila[5];
+        residenciaDepartamento=fila[6];
+        cargaProvincia =fila[7];
+        fechaInicioSintomas=fila[8];
+        fechaApertura=fila[9];
+        sepiApertura =fila[10];
+        fechaInternacion=fila[11];
+        cuidadoIntensivo=fila[12];
+        fechaCuidadoIntensivo=fila[13];
+        fallecido=fila[14];
+        fechaFallecimiento=fila[15];
+        asistenciaRespiratoriaMecanica =fila[16];
+        cargaProvinciaId=fila[17];
+        origenFinanciamiento =fila[18];
+        clasificacion=fila[19];
+        clasificacionResumen=fila[20];
+        residenciaProvinciaId =fila[21];
+        fechaDiagnostico =fila[22];
+        residenciaDepartamentoId=fila[23];
+        ultimaActualizacion=fila[24];
 
 
     }
