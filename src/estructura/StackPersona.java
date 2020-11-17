@@ -2,10 +2,18 @@ package estructura;
 
 public class StackPersona {
     private NodoPersona cima;
-    private int size;
+   public int size;
+   public String provincia;
 
-    public void push( Persona persona) {
+    public StackPersona() {
+        this.cima = null;
+        this.size=0;
+    }
+
+    public void push(Persona persona) {
         cima = new NodoPersona(cima, persona);
+        if(size==0)
+        { provincia=persona.cargaProvincia;}
         size++;
     }
 

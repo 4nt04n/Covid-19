@@ -60,4 +60,34 @@ public class Persona {
     public Persona(){
 
     }
+
+    @Override
+    public String toString() {
+        return   this.idEventoCaso + ' ' +this.sexo + ' ' +edad + ' ' +
+
+
+
+                edadTipo + ' ' +
+                residenciaPais + ' ' +
+                residenciaProvincia + ' ' +
+                residenciaDepartamento + ' ' +
+                cargaProvincia + ' ' +
+                fechaInicioSintomas + ' ' +
+                fechaApertura + ' ' +
+                sepiApertura + ' ' +
+                fechaInternacion + ' ' +
+                cuidadoIntensivo + ' ' +
+                fechaCuidadoIntensivo + ' ' +
+                fallecido + ' ' +
+                fechaFallecimiento + ' ' +
+                 asistenciaRespiratoriaMecanica + ' ' +
+                cargaProvinciaId + ' ' +
+                origenFinanciamiento + ' ' +
+                clasificacion + ' ' +
+                clasificacionResumen + ' ' +
+                residenciaProvinciaId + ' ' +
+                fechaDiagnostico + ' ' +
+                residenciaDepartamentoId + ' ' +
+                ultimaActualizacion + ' ' ;
+    }
 }

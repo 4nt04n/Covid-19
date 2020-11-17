@@ -1,27 +1,111 @@
 
+import estructura.GrupoProvincias;
 import estructura.Persona;
+import estructura.StackPersona;
+
+import javax.sound.midi.Soundbank;
 import java.io.*;
 
 class Main {
+    private static int length = 0;
+    private static int infectEdad[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    private static int muertesEdad[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    private static float numMuertes = 0, numInfect = 0;
 
-    public static void main (String[] args) {
+    public static void main(String[] args) throws Exception {
+        String parametros = "";
 
-        String nombreFichero = "csv/Covid19Casos-10.csv";
-        boolean llave=true;
-        String id="";String parametros;
-        String[] datAux= new String[25];
-        long TInicio, TFin, tiempo; //Variables para determinar el tiempo de ejecución
-        int length=0;
-        int infectEdad[]={0,0,0,0,0,0,0,0,0,0,0};
-        int muertesEdad[]={0,0,0,0,0,0,0,0,0,0,0};
-       float numMuertes =0,numInfect =0;
-        int count=0,aux=0;
-        Persona persona;
+        boolean estad = false, pcasos = false, pmuertes = false, cEdad = false, cui = false;
+        for (int i = 0; args.length > i; i++) {
+            parametros = args[i];
+            switch (parametros) {
+                case "-estad":
 
+                    estad = true;
+                    break;
+                case "-p_casos":
+
+                    pcasos = true;
+
+                    break;
+                case "-p_muertes":
+                    pmuertes = true;
+                    break;
+                case "-casos_edad":
+                    cEdad = true;
+                    break;
+
+                case "-casos_cui":
+                    cui = true;
+                    break;
+                default:
+
+            }
+        }
+        if (args.length == 0) {
+            System.out.println("Faltan Parametros");
+            return;
+        }
+
+        if ((pcasos && pmuertes) || (pcasos && cEdad) || (pcasos && cui) || (pmuertes && cui) || (cEdad && cui))//CD + BD + AD + AC + AB
+        {
+            System.out.println("Parametros Erroneos");
+            return;
+        }
+
+        if (pcasos || pmuertes) {
+            GrupoProvincias datos = insertP(pcasos, pmuertes, estad);
+            StackPersona[] ordenado = datos.ordenar();
+            //  StackPersona[] ordenado= datos.prueba();
+            for (int i = 23; i >= 0; i--) {
+                if (ordenado[i].provincia != null) {
+                    System.out.println("La provincia de " + ordenado[i].provincia + " tiene: " + ordenado[i].size);
+
+                    for (int j = 0; j < ordenado[i].size; j++) {
+                        System.out.println(ordenado[i].topAndPop().toString());
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+    public static void estad() {
+
+        System.out.println("Cantidad total de muestras:" + length);
+        System.out.println("Cantidad total de infectados:" + numInfect);
+        System.out.println("Cantidad de fallecidos:" + numMuertes);
+        System.out.println("Porcentaje de infectado por muestras: %" + (numInfect / length) * 100);
+        System.out.println("Porcentaje de fallecidos por infectados: %" + (numMuertes / length) * 100);
+        System.out.println("Cantidad de infectados por rango etario de 10 años:");
+        for (int j = 1; j < 10; j++) {
+            // System.out.println("Desde los " + (j*10-10) +" hasta los "+j*10+" años: "+infectEdad[j-1]);
+            System.out.println("| " + (j * 10 - 10) + " a " + (j * 10) + " |= " + infectEdad[j - 1]);
+        }
+
+
+        System.out.println("Cantidad de muertes por rango etario:" + "");
+        for (int j = 1; j < 10; j++) {
+            // System.out.println("Desde los " + (j*10-10) +" hasta los "+j*10+" años: "+ muertesEdad[j-1]);
+            System.out.println("| " + (j * 10 - 10) + " a " + (j * 10) + " |= " + muertesEdad[j - 1]);
+        }
+
+
+    }
+
+    public static GrupoProvincias insertP(boolean casos, boolean muertes, boolean estad) {
 
         //Declarar una variable FileReader
+        String nombreFichero = "csv/Covid19Casos-1000.csv";
+        String id = "";
+        String[] datAux = new String[25];
+        int count = 0, aux = 0;
+        Persona persona;
         FileReader fr = null;
-        TInicio = System.nanoTime(); //Tomamos la hora en que inicio el algoritmo y la almacenamos en la variable inicio
+        GrupoProvincias grupo = new GrupoProvincias();
+
         try {
             //Abrir el fichero indicado en la variable nombreFichero
             fr = new FileReader(nombreFichero);
@@ -35,193 +119,115 @@ class Main {
                 //System.out.print((char) caract);
 
 
-                if(caract== 44 ){ //Analizo la coma y almaceno y reseteo  el id
+                if (caract == 44) { //Analizo la coma y almaceno y reseteo  el id
                     caract = fr.read();
-                    datAux[count]=id; //guardo dato
+                    datAux[count] = id; //guardo dato
 
                     count++;
-                    id="";
+                    id = "";
                 }
-                if(caract==10)// si es salto de linea AGREGO PERSONA ENTERA
+                if (caract == 10)// si es salto de linea AGREGO PERSONA ENTERA
                 {
 
-                    datAux[count]=id;  //Almaceno ultimo valor
-
-                    if(datAux[14].equals("SI")) //Cuento los fallecidos
+                    datAux[count] = id;  //Almaceno ultimo valor
+                    persona = new Persona(datAux);//almaceno en persona
+                    if (datAux[14].equals("SI")) //Cuento los fallecidos
                     {
                         numMuertes++;
-                        aux=Integer.parseInt(datAux[2]);
-                        for(int i =1;i<=10;i++){
-                            if(aux<=i*10 && aux>(i*10-10))
-                                muertesEdad[i-1]++;
-
-
-
+                        aux = Integer.parseInt(datAux[2]);
+                        for (int i = 1; i <= 10; i++) {
+                            if (aux <= i * 10 && aux > (i * 10 - 10))
+                                muertesEdad[i - 1]++;
                         }
-                      /*  if(aux<=10){
-                            muertesEdad[0]++;
+                        if (muertes) {    //agrego una persona muerta si la bandera es true
 
-                        }else if(aux<=20 && aux>10){
-                            muertesEdad[1]++;
-
-                        } else if(aux<=30 && aux>20){
-                            muertesEdad[2]++;
-
-                        }else if(aux<=40 && aux>30){
-                            muertesEdad[3]++;
-
-                        }else if(aux<=50 && aux>40){
-                            muertesEdad[4]++;
-
-                        }else if(aux<=60 && aux>50){
-                            muertesEdad[5]++;
-
-                        }else if(aux<=70 && aux>60){
-                            muertesEdad[6]++;
-
-                        }else if(aux<=80 && aux>70){
-                            muertesEdad[7]++;
-
-                        }else if(aux<=90 && aux>80){
-                            muertesEdad[8]++;
-                        }else if(aux<=100 && aux>90){
-                            muertesEdad[9]++;
-                        }*/
+                            grupo.insertar(persona);
+                        }
 
 
                     }
 
-                    if(datAux[20].equals("Confirmado")) //Cuento infectados
-                    {  numInfect++;
-                        aux=Integer.parseInt(datAux[2]);
-                        for(int i =1;i<=10;i++){
-                            if(aux<=i*10 && aux>(i*10-10))
-                                infectEdad[i-1]++;
-
-
-
+                    if (datAux[20].equals("Confirmado")) //Cuento infectados
+                    {
+                        numInfect++;
+                        aux = Integer.parseInt(datAux[2]);
+                        for (int i = 1; i <= 10; i++) {
+                            if (aux <= i * 10 && aux > (i * 10 - 10))
+                                infectEdad[i - 1]++;
                         }
-                      /*  if(aux<=10){
-                            infectEdad[0]++;
 
-                        }else if(aux<=20 && aux>10){
-                            infectEdad[1]++;
-
-                        } else if(aux<=30 && aux>20){
-                            infectEdad[2]++;
-
-                        }else if(aux<=40 && aux>30){
-                            infectEdad[3]++;
-
-                        }else if(aux<=50 && aux>40){
-                            infectEdad[4]++;
-
-                        }else if(aux<=60 && aux>50){
-                            infectEdad[5]++;
-
-                        }else if(aux<=70 && aux>60){
-                            infectEdad[6]++;
-
-                        }else if(aux<=80 && aux>70){
-                            infectEdad[7]++;
-
-                        }else if(aux<=90 && aux>80){
-                            infectEdad[8]++;
-                        }else if(aux<=100 && aux>90){
-                            infectEdad[9]++;
-                        }*/
-
-
+                        if (casos) {
+                            grupo.insertar(persona);
+                        }
 
 
                     }
 
-
-
-
-                    persona =new Persona(datAux);//almaceno en persona
-                    count=0;
-                    id="";
+                    count = 0;
+                    id = "";
                     length++;
 
                 }
-                if(caract !=34 ) //cargo caracter si no es llave
+                if ((caract != 34)) //cargo caracter si no es comillas
                 {
-                    id+=(char) caract;
-                    if(caract==44)
-                    {
-                        id=null;
-                        datAux[count]=id; //guardo dato
+                        if(caract=='\n')
+                        {   fr.read();
+                         caract=fr.read();  }
+
+
+                    if(caract != '\r')
+                    {id += (char) caract;}
+
+                    if (caract == 44) {
+                        id = null;
+                        datAux[count] = id; //guardo dato
                         count++;
-                        id="";
+                        id = "";
+
                     }
+
+
+
+
 
                 }
-
                 caract = fr.read();//Leer el siguiente carácter
             }
-        } catch (FileNotFoundException e) {
-            //Operaciones en caso de no encontrar el fichero
-            System.out.println("Error: Fichero no encontrado");
-            //Mostrar el error producido por la excepción
-            System.out.println(e.getMessage());
+
+
+        }
+     catch(FileNotFoundException e)
+
+    {
+        //Operaciones en caso de no encontrar el fichero
+        System.out.println("Error: Fichero no encontrado");
+        //Mostrar el error producido por la excepción
+        System.out.println(e.getMessage());
+    } catch(Exception e)
+
+    {
+        //Operaciones en caso de error general
+        System.out.println("Error de lectura del fichero");
+        System.out.println(e.getMessage());
+    } finally
+
+    {
+        //Operaciones que se harán en cualquier caso. Si hay error o no.
+        try {
+            //Cerrar el fichero si se ha abierto
+            if (fr != null)
+                fr.close();
         } catch (Exception e) {
-            //Operaciones en caso de error general
-            System.out.println("Error de lectura del fichero");
+            System.out.println("Error al cerrar el fichero");
             System.out.println(e.getMessage());
-        } finally {
-            //Operaciones que se harán en cualquier caso. Si hay error o no.
-            try {
-                //Cerrar el fichero si se ha abierto
-                if (fr != null)
-                    fr.close();
-            } catch (Exception e) {
-                System.out.println("Error al cerrar el fichero");
-                System.out.println(e.getMessage());
-            }
-
-        }TFin = System.nanoTime(); //Tomamos la hora en que inicio el algoritmo y la almacenamos en la variable inicio
-        System.out.println((TFin-TInicio)/10000);
-
-        for (int i=0;args.length>i;i++){
-            parametros=args[i];
-            switch (parametros){
-                case "-estad":
-
-                    System.out.println("Cantidad total de muestras:" + length);
-                    System.out.println("Cantidad total de infectados:" + numInfect);
-                    System.out.println("Cantidad de fallecidos:" + numMuertes);
-                    System.out.println("Porcentaje de infectado por muestras: %" + (numInfect/length)*100);
-                    System.out.println("Porcentaje de fallecidos por infectados: %" + (numMuertes /length)*100);
-                    System.out.println("Cantidad de infectados por rango etario de 10 años:");
-                    for(int j=1;j<10;j++){
-                      // System.out.println("Desde los " + (j*10-10) +" hasta los "+j*10+" años: "+infectEdad[j-1]);
-                        System.out.println("| "+(j*10-10)+" a "+ (j*10)+" |= "+infectEdad[j-1]);
-                    }
-
-
-
-                    System.out.println("Cantidad de muertes por rango etario:" + "");
-                    for(int j=1;j<10;j++){
-                       // System.out.println("Desde los " + (j*10-10) +" hasta los "+j*10+" años: "+ muertesEdad[j-1]);
-                        System.out.println("| "+(j*10-10)+" a "+ (j*10)+" |= "+muertesEdad[j-1]);
-                    }
-
-                    break;
-                case "-p_casos":
-                   
-                    break;
-                case "-p_muertes":
-
-                    break;
-                case "-casos_edad":
-
-                    break;
-                default:
-
-            }
-
         }
 
     }
+
+
+        return grupo;
+
+}
+
+
 }
