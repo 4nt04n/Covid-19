@@ -100,11 +100,12 @@ public class GrupoProvincias {
     }
     public StackPersona[] ordenar(){
 
-            quicksort(this.provincias,0,23);
+          //  quicksort(this.provincias,0,23);
+        burbuja(this.provincias);
             return this.provincias;
 
     }
-   private void quicksort (StackPersona [ ] item, int left, int right)
+   /*private void quicksort (StackPersona [ ] item, int left, int right)
     {
         int i, j;
         StackPersona temp;
@@ -129,7 +130,20 @@ public class GrupoProvincias {
 
         if ( i < right ) quicksort ( item, i+1, right );
         if ( left < j ) quicksort (item, left, j-1 );
-    }
+    }*/
+   public static void burbuja(StackPersona [] A){
+       int i, j;
+       StackPersona aux;
+       for(i=0;i<A.length-1;i++)
+           for(j=0;j<A.length-i-1;j++)
+               if(A[j+1].size>A[j].size){
+                   aux=A[j+1];
+                   A[j+1]=A[j];
+                   A[j]=aux;
+               }
+   }
+
+
 public StackPersona[] prueba(){
 
         return this.provincias;

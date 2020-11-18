@@ -96,7 +96,7 @@ public class Persona {
 
     @Override
     public String toString() {
-        return   idEventoCaso + ' ' + sexo + ' ' +edad + ' ' +
+        return  ' ' + idEventoCaso + ' ' + sexo + ' ' +edad + ' ' +
 
 
 

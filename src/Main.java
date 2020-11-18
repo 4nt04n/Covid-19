@@ -4,27 +4,28 @@ import estructura.GrupoProvincias;
 import estructura.Persona;
 import estructura.StackPersona;
 
-import javax.sound.midi.Soundbank;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 class Main {
-    private static int length = 0;
-    private static int infectEdad[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    private static int muertesEdad[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    private static int length = 0; //cantidad de gente
+    private static int infectEdad[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; //infectador por rango de edad
+    private static int muertesEdad[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; //muertos por rango de edad
     private static float numMuertes = 0, numInfect = 0;
 
     public static void main(String[] args) throws Exception {
         String parametros = "";
+        String dirDoc="";
         long TInicio, TFin=0, tiempo; //Variables para determinar el tiempo de ejecución
         boolean estad = false, pcasos = false, pmuertes = false, cEdad = false, cui = false;
         String años=null;
-        int aux=0;
+        int aux=0,n=24;
         SimpleDateFormat objSDF = new SimpleDateFormat("yyyy-MM-dd");
         Date dt_1=objSDF.parse("1900-01-01");
         AvlTree arbol=new AvlTree();
-        for (int i = 0; args.length > i; i++) {
+
+        for (int i = 0; args.length-1 > i; i++) { //Control de Args Menu
             parametros = args[i];
             switch (parametros) {
                 case "-estad":
@@ -34,42 +35,72 @@ class Main {
                 case "-p_casos":
 
                     pcasos = true;
-
+                    try {
+                        if (i + 1 != args.length) {
+                            n = Integer.parseInt(args[i + 1]);
+                        }
+                    }
+                    catch (Exception e){
+                        System.out.println("Argumentos mal ingresados");
+                        return;
+                    }
                     break;
                 case "-p_muertes":
                     pmuertes = true;
+                   try{ if(i+1 != args.length)
+                    {  n=Integer.parseInt(args[i+1]);}
+
+                   }catch (Exception e){
+                       System.out.println("Argumentos mal ingresados");
+                       return;
+                   }
                     break;
                 case "-casos_edad":
                     cEdad = true;
-                      años=args[i+1];
+                    try{
+                    if(args[i+1]!=null)
+                    {años=args[i+1];}}
+                    catch (Exception e){
+                        System.out.println("Falta los años en -casos_edad años");
+                        return;
+                    }
                     break;
 
                 case "-casos_cui":
                     cui = true;
-                    if(args[i+1]!=null)
+                  try{  if(args[i+1]!=null)
                         dt_1=objSDF.parse(args[i+1]);
+                  }
+                  catch (Exception E){
+                  }
                     break;
                 default:
 
             }
         }
-        if (args.length == 0) {
+        dirDoc=args[args.length-1];
+
+        if (args.length == 0) //No envian argumentos
+        {
             System.out.println("Faltan Parametros");
             return;
         }
 
-        if ((pcasos && pmuertes) || (pcasos && cEdad) || (pcasos && cui) || (pmuertes && cui) || (cEdad && cui))//CD + BD + AD + AC + AB
+        if ((pcasos && pmuertes) || (pcasos && cEdad) || (pcasos && cui) || (pmuertes && cui) || (cEdad && cui))//CD + BD + AD + AC + AB  Nos envian mas Parametros de los que van
         {
             System.out.println("Parametros Erroneos");
             return;
         }
+        TInicio = System.nanoTime(); //Tomamos la hora en que inicio el algoritmo y la almacenamos en la variable inicio
+        if (pcasos || pmuertes ) //Si nos piden -p_casos  o  -p_muertes
+        {
 
-        if (pcasos || pmuertes ) {
+            GrupoProvincias datos = insertP(pcasos, pmuertes,cEdad,años,dirDoc); //Leo datos y filtro lo pedido
+            StackPersona[] ordenado = datos.ordenar(); //ordeno el stack recibido
 
-            GrupoProvincias datos = insertP(pcasos, pmuertes,cEdad,años);
-            StackPersona[] ordenado = datos.ordenar();
 
-            for (int i = 23; i >= 0; i--) {
+
+            for (int i = 0; i <= n-1; i++) {
                if (ordenado[i].provincia != null) {
                     System.out.println("\n La provincia de " + ordenado[i].provincia + " tiene: " + ordenado[i].size+"\n");
                         aux=ordenado[i].size;
@@ -82,8 +113,8 @@ class Main {
             }
 
         }
-        if(cEdad){
-            GrupoProvincias datos = insertP(pcasos, pmuertes,cEdad,años);
+        if(cEdad){ //-casos_edad
+            GrupoProvincias datos = insertP(pcasos, pmuertes,cEdad,años,dirDoc);
             StackPersona[] pilas= datos.prueba();
             for (int i = 0; i <= 23; i++) {
                 if (pilas[i].provincia != null) {
@@ -95,22 +126,21 @@ class Main {
                 }
             }
         }
-        TInicio = System.nanoTime(); //Tomamos la hora en que inicio el algoritmo y la almacenamos en la variable inicio
+
         if(cui){
 
-
-            arbol= insertCui(dt_1);
-            arbol.printTree();
-
-
+            arbol= insertCui(dt_1,dirDoc);
+            System.out.println("Casos en cuidados intensivos: \n");
+            arbol.printInOrder();
         }
 
-        TFin = System.nanoTime(); //Tomamos la hora en que inicio el algoritmo y la almacenamos en la variable inicio
+        System.out.println();
 
         if(estad){
             estad();
-
         }
+
+        TFin = System.nanoTime(); //Tomamos la hora en que inicio el algoritmo y la almacenamos en la variable inicio
         System.out.println((TFin-TInicio)/1000000);
 
     }
@@ -122,14 +152,13 @@ class Main {
         System.out.println("Porcentaje de infectado por muestras: %" + (numInfect / length) * 100);
         System.out.println("Porcentaje de fallecidos por infectados: %" + (numMuertes / length) * 100);
         System.out.println("Cantidad de infectados por rango etario de 10 años:");
-        for (int j = 1; j < 10; j++) {
+        for (int j = 1; j <=10; j++) {
             // System.out.println("Desde los " + (j*10-10) +" hasta los "+j*10+" años: "+infectEdad[j-1]);
             System.out.println("| " + (j * 10 - 10) + " a " + (j * 10) + " |= " + infectEdad[j - 1]);
         }
 
-
         System.out.println("Cantidad de muertes por rango etario:" + "");
-        for (int j = 1; j < 10; j++) {
+        for (int j = 1; j <= 10; j++) {
             // System.out.println("Desde los " + (j*10-10) +" hasta los "+j*10+" años: "+ muertesEdad[j-1]);
             System.out.println("| " + (j * 10 - 10) + " a " + (j * 10) + " |= " + muertesEdad[j - 1]);
         }
@@ -137,10 +166,10 @@ class Main {
 
     }
 
-    public static GrupoProvincias insertP(boolean casos, boolean muertes, boolean casoEdad,String años) {
+    public static GrupoProvincias insertP(boolean casos, boolean muertes, boolean casoEdad,String años,String dirDoc) {
 
         //Declarar una variable FileReader
-        String nombreFichero = "C:\\Users\\4NT04N PC\\Desktop\\Covid19Casos.csv";
+        String nombreFichero = dirDoc;
         String id = "";
         String[] datAux = new String[25];
         int count = 0, aux = 0;
@@ -164,7 +193,6 @@ class Main {
                 if (caract == 44) { //Analizo la coma y almaceno y reseteo  el id
                     caract = fr.read();
                     datAux[count] = id; //guardo dato
-
 
                     count++;
                     id = "";
@@ -211,8 +239,6 @@ class Main {
                         if (casoEdad && (años.equals(datAux[2])) ){
                                 grupo.insertar(persona);
                         }
-
-
                     }
 
                     count = 0;
@@ -237,11 +263,6 @@ class Main {
                         id = "";
 
                     }
-
-
-
-
-
                 }
                 caract = fr.read();//Leer el siguiente carácter
             }
@@ -280,10 +301,10 @@ class Main {
         return grupo;
 
 }
-    public static AvlTree insertCui(Date fecha) {
+    public static AvlTree insertCui(Date fecha,String dirDoc) {
 
         //Declarar una variable FileReader
-        String nombreFichero = "C:\\Users\\4NT04N PC\\Desktop\\Covid19Casos-100000.csv";
+        String nombreFichero = dirDoc;
         String id = "";
         String[] datAux = new String[25];
         int count = 0, aux = 0;

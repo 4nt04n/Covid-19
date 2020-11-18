@@ -337,6 +337,11 @@ public class AvlTree<AnyType extends Comparable<? super AnyType>> {
 
         print(false, identacion + (esDerecho ? "|    " : "     "), r.left);
     }
+    //Imprime en orden ascendete
+    public void printInOrder(){
+        if(root!=null) root.printInOrder();
+
+    }
 
     /**
      * Double rotate binary tree node: first right child
@@ -361,6 +366,14 @@ public class AvlTree<AnyType extends Comparable<? super AnyType>> {
             right = rt;
             height = 0;
             persona=thePersona;
+        }
+        public void printInOrder()
+        {
+            if(right != null)
+                right.printInOrder();
+            System.out.println(persona.toString());
+            if(left != null)
+                left.printInOrder();
         }
 
         AnyType data;      // The data in the node
