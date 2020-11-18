@@ -36,8 +36,8 @@ public class AvlTree<AnyType extends Comparable<? super AnyType>> {
      *
      * @param x the item to insert.
      */
-    public void insert(AnyType x,Persona p) {
-        root = insert(x, root,p);
+    public void insert(AnyType x, Persona p) {
+        root = insert(x, root, p);
     }
 
     /**
@@ -174,16 +174,16 @@ public class AvlTree<AnyType extends Comparable<? super AnyType>> {
      * @param t the node that roots the subtree.
      * @return the new root of the subtree.
      */
-    private AvlNode<AnyType> insert(AnyType x, AvlNode<AnyType> t,Persona persona) {
+    private AvlNode<AnyType> insert(AnyType x, AvlNode<AnyType> t, Persona persona) {
         if (t == null)
-            return new AvlNode<>(x, null, null,persona);
+            return new AvlNode<>(x, null, null, persona);
 
         int compareResult = x.compareTo(t.data);
 
         if (compareResult < 0)
-            t.left = insert(x, t.left,persona);
+            t.left = insert(x, t.left, persona);
         else if (compareResult > 0)
-            t.right = insert(x, t.right,persona);
+            t.right = insert(x, t.right, persona);
         else
             ;  // Duplicate; do nothing
         return balance(t);
@@ -326,20 +326,21 @@ public class AvlTree<AnyType extends Comparable<? super AnyType>> {
 
         print(true, identacion + (esDerecho ? "     " : "|    "), r.right);
 
-       /* System.out.print(identacion);
+        System.out.print(identacion);
         if (esDerecho) {
             System.out.print(" /");
         } else {
             System.out.print(" \\");
         }
-        System.out.print("-- ");*/
+        System.out.print("-- ");
         System.out.println(r.persona.toString());
 
         print(false, identacion + (esDerecho ? "|    " : "     "), r.left);
     }
+
     //Imprime en orden ascendete
-    public void printInOrder(){
-        if(root!=null) root.printInOrder();
+    public void printInOrder() {
+        if (root != null) root.printInOrder();
 
     }
 
@@ -357,22 +358,22 @@ public class AvlTree<AnyType extends Comparable<? super AnyType>> {
     private static class AvlNode<AnyType> {
         // Constructors
         AvlNode(AnyType theElement) {
-            this(theElement, null, null,null);
+            this(theElement, null, null, null);
         }
 
-        AvlNode(AnyType theElement, AvlNode<AnyType> lt, AvlNode<AnyType> rt,Persona thePersona) {
+        AvlNode(AnyType theElement, AvlNode<AnyType> lt, AvlNode<AnyType> rt, Persona thePersona) {
             data = theElement;
             left = lt;
             right = rt;
             height = 0;
-            persona=thePersona;
+            persona = thePersona;
         }
-        public void printInOrder()
-        {
-            if(right != null)
+
+        public void printInOrder() {
+            if (right != null)
                 right.printInOrder();
             System.out.println(persona.toString());
-            if(left != null)
+            if (left != null)
                 left.printInOrder();
         }
 
@@ -388,24 +389,4 @@ public class AvlTree<AnyType extends Comparable<? super AnyType>> {
      */
     private AvlNode<AnyType> root;
 
-
-  /*  // Test program
-    public static void main(String[] args) {
-        AvlTree<Integer> t = new AvlTree<>();
-
-        for (int i = 0; i < 20; i++) {
-
-            t.insert(i);
-            t.printTree();
-            System.out.println("");
-            System.out.println("");
-        }
-        for (int i = 0; i < 20; i++) {
-
-            t.remove(i);
-            t.printTree();
-            System.out.println("");
-            System.out.println("");
-        }
-    }*/
 }

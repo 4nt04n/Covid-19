@@ -31,34 +31,35 @@ public class Persona {
     public Date fechaCui;
 
     public Persona(String[] fila) {
-        idEventoCaso=fila[0];
-        sexo=fila[1];
-        edad=fila[2];
-        edadTipo=fila[3];
-        residenciaPais=fila[4];
-        residenciaProvincia=fila[5];
-        residenciaDepartamento=fila[6];
-        cargaProvincia =fila[7];
-        fechaInicioSintomas=fila[8];
-        fechaApertura=fila[9];
-        sepiApertura =fila[10];
-        fechaInternacion=fila[11];
-        cuidadoIntensivo=fila[12];
-        fechaCuidadoIntensivo=fila[13];
-        fallecido=fila[14];
-        fechaFallecimiento=fila[15];
-        asistenciaRespiratoriaMecanica =fila[16];
-        cargaProvinciaId=fila[17];
-        origenFinanciamiento =fila[18];
-        clasificacion=fila[19];
-        clasificacionResumen=fila[20];
-        residenciaProvinciaId =fila[21];
-        fechaDiagnostico =fila[22];
-        residenciaDepartamentoId=fila[23];
-        ultimaActualizacion=fila[24];
+        idEventoCaso = fila[0];
+        sexo = fila[1];
+        edad = fila[2];
+        edadTipo = fila[3];
+        residenciaPais = fila[4];
+        residenciaProvincia = fila[5];
+        residenciaDepartamento = fila[6];
+        cargaProvincia = fila[7];
+        fechaInicioSintomas = fila[8];
+        fechaApertura = fila[9];
+        sepiApertura = fila[10];
+        fechaInternacion = fila[11];
+        cuidadoIntensivo = fila[12];
+        fechaCuidadoIntensivo = fila[13];
+        fallecido = fila[14];
+        fechaFallecimiento = fila[15];
+        asistenciaRespiratoriaMecanica = fila[16];
+        cargaProvinciaId = fila[17];
+        origenFinanciamiento = fila[18];
+        clasificacion = fila[19];
+        clasificacionResumen = fila[20];
+        residenciaProvinciaId = fila[21];
+        fechaDiagnostico = fila[22];
+        residenciaDepartamentoId = fila[23];
+        ultimaActualizacion = fila[24];
 
 
     }
+
     public Persona(String[] fila, Date cui) {
         idEventoCaso = fila[0];
         sexo = fila[1];
@@ -85,19 +86,18 @@ public class Persona {
         fechaDiagnostico = fila[22];
         residenciaDepartamentoId = fila[23];
         ultimaActualizacion = fila[24];
-        fechaCui=cui;
+        fechaCui = cui;
 
     }
 
 
-    public Persona(){
+    public Persona() {
 
     }
 
     @Override
     public String toString() {
-        return  ' ' + idEventoCaso + ' ' + sexo + ' ' +edad + ' ' +
-
+        return ' ' + idEventoCaso + ' ' + sexo + ' ' + edad + ' ' +
 
 
                 edadTipo + ' ' +
@@ -113,7 +113,7 @@ public class Persona {
                 fechaCuidadoIntensivo + ' ' +
                 fallecido + ' ' +
                 fechaFallecimiento + ' ' +
-                 asistenciaRespiratoriaMecanica + ' ' +
+                asistenciaRespiratoriaMecanica + ' ' +
                 cargaProvinciaId + ' ' +
                 origenFinanciamiento + ' ' +
                 clasificacion + ' ' +
@@ -121,6 +121,6 @@ public class Persona {
                 residenciaProvinciaId + ' ' +
                 fechaDiagnostico + ' ' +
                 residenciaDepartamentoId + ' ' +
-                ultimaActualizacion + ' ' ;
+                ultimaActualizacion + ' ';
     }
 }
