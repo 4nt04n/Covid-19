@@ -1,10 +1,13 @@
 
+import estructura.AvlTree;
 import estructura.GrupoProvincias;
 import estructura.Persona;
 import estructura.StackPersona;
 
 import javax.sound.midi.Soundbank;
 import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 class Main {
     private static int length = 0;
@@ -14,8 +17,13 @@ class Main {
 
     public static void main(String[] args) throws Exception {
         String parametros = "";
-
+        long TInicio, TFin=0, tiempo; //Variables para determinar el tiempo de ejecución
         boolean estad = false, pcasos = false, pmuertes = false, cEdad = false, cui = false;
+        String años=null;
+        int aux=0;
+        SimpleDateFormat objSDF = new SimpleDateFormat("yyyy-MM-dd");
+        Date dt_1=objSDF.parse("1900-01-01");
+        AvlTree arbol=new AvlTree();
         for (int i = 0; args.length > i; i++) {
             parametros = args[i];
             switch (parametros) {
@@ -33,10 +41,13 @@ class Main {
                     break;
                 case "-casos_edad":
                     cEdad = true;
+                      años=args[i+1];
                     break;
 
                 case "-casos_cui":
                     cui = true;
+                    if(args[i+1]!=null)
+                        dt_1=objSDF.parse(args[i+1]);
                     break;
                 default:
 
@@ -53,15 +64,16 @@ class Main {
             return;
         }
 
-        if (pcasos || pmuertes) {
-            GrupoProvincias datos = insertP(pcasos, pmuertes, estad);
-            StackPersona[] ordenado = datos.ordenar();
-            //  StackPersona[] ordenado= datos.prueba();
-            for (int i = 23; i >= 0; i--) {
-                if (ordenado[i].provincia != null) {
-                    System.out.println("La provincia de " + ordenado[i].provincia + " tiene: " + ordenado[i].size);
+        if (pcasos || pmuertes ) {
 
-                    for (int j = 0; j < ordenado[i].size; j++) {
+            GrupoProvincias datos = insertP(pcasos, pmuertes,cEdad,años);
+            StackPersona[] ordenado = datos.ordenar();
+
+            for (int i = 23; i >= 0; i--) {
+               if (ordenado[i].provincia != null) {
+                    System.out.println("\n La provincia de " + ordenado[i].provincia + " tiene: " + ordenado[i].size+"\n");
+                        aux=ordenado[i].size;
+                    for (int j = 0; j < aux; j++) {
                         System.out.println(ordenado[i].topAndPop().toString());
                     }
 
@@ -70,6 +82,36 @@ class Main {
             }
 
         }
+        if(cEdad){
+            GrupoProvincias datos = insertP(pcasos, pmuertes,cEdad,años);
+            StackPersona[] pilas= datos.prueba();
+            for (int i = 0; i <= 23; i++) {
+                if (pilas[i].provincia != null) {
+                    System.out.println("\n La provincia de " + pilas[i].provincia + " tiene " + pilas[i].size+" personas infectadas de "+años+" años"+"\n");
+                    aux=pilas[i].size;
+                    for (int j = 0; j <=aux  ;j++) {
+                        System.out.println(pilas[i].topAndPop().toString());
+                    }
+                }
+            }
+        }
+        TInicio = System.nanoTime(); //Tomamos la hora en que inicio el algoritmo y la almacenamos en la variable inicio
+        if(cui){
+
+
+            arbol= insertCui(dt_1);
+            arbol.printTree();
+
+
+        }
+
+        TFin = System.nanoTime(); //Tomamos la hora en que inicio el algoritmo y la almacenamos en la variable inicio
+
+        if(estad){
+            estad();
+
+        }
+        System.out.println((TFin-TInicio)/1000000);
 
     }
     public static void estad() {
@@ -95,10 +137,10 @@ class Main {
 
     }
 
-    public static GrupoProvincias insertP(boolean casos, boolean muertes, boolean estad) {
+    public static GrupoProvincias insertP(boolean casos, boolean muertes, boolean casoEdad,String años) {
 
         //Declarar una variable FileReader
-        String nombreFichero = "csv/Covid19Casos-1000.csv";
+        String nombreFichero = "C:\\Users\\4NT04N PC\\Desktop\\Covid19Casos.csv";
         String id = "";
         String[] datAux = new String[25];
         int count = 0, aux = 0;
@@ -123,6 +165,7 @@ class Main {
                     caract = fr.read();
                     datAux[count] = id; //guardo dato
 
+
                     count++;
                     id = "";
                 }
@@ -130,6 +173,12 @@ class Main {
                 {
 
                     datAux[count] = id;  //Almaceno ultimo valor
+                    if(datAux[3]=="Meses"){
+                        datAux[2]="0";
+                    }
+
+
+
                     persona = new Persona(datAux);//almaceno en persona
                     if (datAux[14].equals("SI")) //Cuento los fallecidos
                     {
@@ -159,6 +208,9 @@ class Main {
                         if (casos) {
                             grupo.insertar(persona);
                         }
+                        if (casoEdad && (años.equals(datAux[2])) ){
+                                grupo.insertar(persona);
+                        }
 
 
                     }
@@ -179,7 +231,7 @@ class Main {
                     {id += (char) caract;}
 
                     if (caract == 44) {
-                        id = null;
+                        id = "0";
                         datAux[count] = id; //guardo dato
                         count++;
                         id = "";
@@ -228,6 +280,153 @@ class Main {
         return grupo;
 
 }
+    public static AvlTree insertCui(Date fecha) {
+
+        //Declarar una variable FileReader
+        String nombreFichero = "C:\\Users\\4NT04N PC\\Desktop\\Covid19Casos-100000.csv";
+        String id = "";
+        String[] datAux = new String[25];
+        int count = 0, aux = 0;
+        Persona persona;
+        FileReader fr = null;
+        AvlTree arbol = new AvlTree();
+        SimpleDateFormat objSDF = new SimpleDateFormat("yyyy-MM-dd");
+        Date dt_1=fecha;
+        Date dt_2=null;
+        boolean info=false;
 
 
+        try {
+            //Abrir el fichero indicado en la variable nombreFichero
+            fr = new FileReader(nombreFichero);
+            //Leer el primer carácter
+            //Se debe almacenar en una variable de tipo int
+            int caract = fr.read();
+            //Se recorre el fichero hasta encontrar el carácter -1
+            //   que marca el final del fichero
+            while (caract != -1) {
+                //Mostrar en pantalla el carácter leído convertido a char
+                //System.out.print((char) caract);
+
+
+                if (caract == 44) { //Analizo la coma y almaceno y reseteo  el id
+                    caract = fr.read();
+                    datAux[count] = id; //guardo dato
+
+
+                    count++;
+                    id = "";
+                }
+                if (caract == 10)// si es salto de linea AGREGO PERSONA ENTERA
+                {
+                    if(info) {
+                        datAux[count] = id;  //Almaceno ultimo valor
+                        if (datAux[3] == "Meses") {
+                            datAux[2] = "0";
+                        }
+                        if(datAux[13]!= "0") {
+                            dt_2 = objSDF.parse(datAux[13]);
+                        }else{dt_2= objSDF.parse("0000-01-01");}
+
+                        if (datAux[14].equals("SI")) //Cuento los fallecidos
+                        {
+                            numMuertes++;
+                            aux = Integer.parseInt(datAux[2]);
+                            for (int i = 1; i <= 10; i++) {
+                                if (aux <= i * 10 && aux > (i * 10 - 10))
+                                    muertesEdad[i - 1]++;
+                            }
+
+
+                        }
+
+                        if (datAux[20].equals("Confirmado")) //Cuento infectados
+                        {
+                            numInfect++;
+                            aux = Integer.parseInt(datAux[2]);
+                            for (int i = 1; i <= 10; i++) {
+                                if (aux <= i * 10 && aux > (i * 10 - 10))
+                                    infectEdad[i - 1]++;
+                            }
+
+
+                        }
+                        if (dt_2.compareTo(dt_1) >= 0) {
+                            persona = new Persona(datAux, dt_2);//almaceno en persona
+                            arbol.insert(dt_2, persona);
+                        }
+
+
+                        count = 0;
+                        id = "";
+                        length++;
+                    }
+                    count = 0;
+                    id = "";
+                    info=true;
+                }
+                if ((caract != 34)) //cargo caracter si no es comillas
+                {
+                    if(caract=='\n')
+                    {   fr.read();
+                        caract=fr.read();  }
+
+
+                    if(caract != '\r')
+                    {id += (char) caract;}
+
+                    if (caract == 44) {
+                        id = "0";
+                        datAux[count] = id; //guardo dato
+                        count++;
+                        id = "";
+
+                    }
+
+
+
+
+
+                }
+                caract = fr.read();//Leer el siguiente carácter
+            }
+
+
+        }
+        catch(FileNotFoundException e)
+
+        {
+            //Operaciones en caso de no encontrar el fichero
+            System.out.println("Error: Fichero no encontrado");
+            //Mostrar el error producido por la excepción
+            System.out.println(e.getMessage());
+        } catch(Exception e)
+
+        {
+            //Operaciones en caso de error general
+            System.out.println("Error de lectura del fichero");
+            System.out.println(e.getMessage());
+        } finally
+
+        {
+            //Operaciones que se harán en cualquier caso. Si hay error o no.
+            try {
+                //Cerrar el fichero si se ha abierto
+                if (fr != null)
+                    fr.close();
+            } catch (Exception e) {
+                System.out.println("Error al cerrar el fichero");
+                System.out.println(e.getMessage());
+            }
+
+        }
+
+
+        return arbol;
+
+    }
 }
+
+
+
+

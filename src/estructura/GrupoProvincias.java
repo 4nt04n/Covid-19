@@ -5,7 +5,7 @@ import java.sql.SQLOutput;
 
 public class GrupoProvincias {
     public int length=0;
-    private StackPersona[] provincias=new StackPersona[25];//29 por ser primo y evitar colisiones
+    private StackPersona[] provincias=new StackPersona[25];
     public GrupoProvincias(){
 
         for (int i = 0; i < 25; i++) {
@@ -19,75 +19,75 @@ public class GrupoProvincias {
 
             case "Buenos Aires":
                 this.provincias[0].push(persona);
-
                 break;
-            case "Córdoba":
+
+            case "CABA":
                 this.provincias[1].push(persona);
                break;
-            case "CABA":
+            case "Catamarca":
                 this.provincias[2].push(persona);
             break;
-            case "Mendoza":
+            case "Chaco":
                 this.provincias[3].push(persona);
             break;
-            case "Formosa":
+            case "Chubut":
                this.provincias[4].push(persona);
             break;
-            case "Santa Fe":
+            case "Corrientes":
                 this.provincias[5].push(persona);
             break;
-            case "San Luis":
+            case "Córdoba":
                 this.provincias[6].push(persona);
             break;
-            case "Tucumán":
+            case "Formosa":
                 this.provincias[7].push(persona);
             break;
-            case "Chaco":
+            case "Jujuy":
                 this.provincias[8].push(persona);
             break;
-            case "Santa Cruz":
+            case "La Pampa":
                 this.provincias[9].push(persona);
             break;
-            case "Neuquén":
+            case "La Rioja":
                 this.provincias[10].push(persona);
             break;
-            case "Corrientes":
+            case "Mendoza":
                 this.provincias[11].push(persona);
             break;
-            case "San Juan":
+            case "Misiones":
                 this.provincias[12].push(persona);
             break;
-            case "Jujuy":
+            case "Neuquén":
                 this.provincias[13].push(persona);
             break;
-            case "La Pampa":
+            case "Río Negro":
                 this.provincias[14].push(persona);
             break;
             case "Salta":
                 this.provincias[15].push(persona);
             break;
-            case "Santiago del Estero":
+            case "San Juan":
                 this.provincias[16].push(persona);
             break;
-            case "Tierra del Fuego":
+            case "San Luis":
                 this.provincias[17].push(persona);
             break;
-            case "Catamarca":
+            case "Santa Cruz":
                 this.provincias[18].push(persona);
                 break;
-            case "La Rioja":
+            case "Santa Fe":
                 this.provincias[19].push(persona);
                 break;
 
-            case "Misiones":
+            case "Santiago Del Estero":
                 this.provincias[20].push(persona);
                 break;
 
-            case "Río Negro":
+            case "Tierra Del Fuego":
                 this.provincias[21].push(persona);
                 break;
 
-            case "Chubut":
+            case "Tucumán":
                 this.provincias[22].push(persona);
                 break;
 

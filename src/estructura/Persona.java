@@ -1,5 +1,7 @@
 package estructura;
 
+import java.util.Date;
+
 public class Persona {
     public String idEventoCaso;
     public String sexo;//CHAR
@@ -26,7 +28,7 @@ public class Persona {
     public String fechaDiagnostico;
     public String residenciaDepartamentoId;// INT
     public String ultimaActualizacion; //Fecha
-    public Persona siguiente=null;
+    public Date fechaCui;
 
     public Persona(String[] fila) {
         idEventoCaso=fila[0];
@@ -57,13 +59,44 @@ public class Persona {
 
 
     }
+    public Persona(String[] fila, Date cui) {
+        idEventoCaso = fila[0];
+        sexo = fila[1];
+        edad = fila[2];
+        edadTipo = fila[3];
+        residenciaPais = fila[4];
+        residenciaProvincia = fila[5];
+        residenciaDepartamento = fila[6];
+        cargaProvincia = fila[7];
+        fechaInicioSintomas = fila[8];
+        fechaApertura = fila[9];
+        sepiApertura = fila[10];
+        fechaInternacion = fila[11];
+        cuidadoIntensivo = fila[12];
+        fechaCuidadoIntensivo = fila[13];
+        fallecido = fila[14];
+        fechaFallecimiento = fila[15];
+        asistenciaRespiratoriaMecanica = fila[16];
+        cargaProvinciaId = fila[17];
+        origenFinanciamiento = fila[18];
+        clasificacion = fila[19];
+        clasificacionResumen = fila[20];
+        residenciaProvinciaId = fila[21];
+        fechaDiagnostico = fila[22];
+        residenciaDepartamentoId = fila[23];
+        ultimaActualizacion = fila[24];
+        fechaCui=cui;
+
+    }
+
+
     public Persona(){
 
     }
 
     @Override
     public String toString() {
-        return   this.idEventoCaso + ' ' +this.sexo + ' ' +edad + ' ' +
+        return   idEventoCaso + ' ' + sexo + ' ' +edad + ' ' +
 
 
 
