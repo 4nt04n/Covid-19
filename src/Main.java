@@ -96,7 +96,7 @@ class Main {
         if (pcasos || pmuertes) //Si nos piden -p_casos  o  -p_muertes
         {
 
-            GrupoProvincias datos = insertP(pcasos, pmuertes, cEdad, años, dirDoc); //Leo datos y filtro lo pedido
+            GrupoProvincias datos = insertP(estad, pcasos, pmuertes, cEdad, años, dirDoc); //Leo datos y filtro lo pedido
             StackPersona[] ordenado = datos.ordenar(); //ordeno el stack recibido
 
 
@@ -114,7 +114,7 @@ class Main {
 
         }
         if (cEdad) { //-casos_edad
-            GrupoProvincias datos = insertP(pcasos, pmuertes, cEdad, años, dirDoc);
+            GrupoProvincias datos = insertP(estad, pcasos, pmuertes, cEdad, años, dirDoc);
             StackPersona[] pilas = datos.getStack();
             for (int i = 0; i <= 23; i++) {
                 if (pilas[i].provincia != null) {
@@ -129,7 +129,7 @@ class Main {
 
         if (cui) {
 
-            arbol = insertCui(dt_1, dirDoc);
+            arbol = insertCui(estad, dt_1, dirDoc);
             System.out.println("Casos en cuidados intensivos: \n");
             arbol.printInOrder();
         }
@@ -137,8 +137,9 @@ class Main {
         System.out.println();
 
         if (estad) {
-            if (!cEdad && !pcasos && !pmuertes && !cui)
-            { GrupoProvincias datos = insertP(pcasos, pmuertes, cEdad, años, dirDoc);}
+            if (!cEdad && !pcasos && !pmuertes && !cui) {
+                GrupoProvincias datos = insertP(estad, pcasos, pmuertes, cEdad, años, dirDoc);
+            }
             estad();
         }
 
@@ -169,7 +170,7 @@ class Main {
 
     }
 
-    public static GrupoProvincias insertP(boolean casos, boolean muertes, boolean casoEdad, String años, String dirDoc) {
+    public static GrupoProvincias insertP(boolean estad, boolean casos, boolean muertes, boolean casoEdad, String años, String dirDoc) {
 
         //Declarar una variable FileReader
         String nombreFichero = dirDoc;
@@ -211,11 +212,13 @@ class Main {
 
                     if (datAux[14].equals("SI")) //Cuento los fallecidos
                     {
-                        numMuertes++;
-                        aux = Integer.parseInt(datAux[2]);
-                        for (int i = 1; i <= 10; i++) {
-                            if (aux <= i * 10 && aux > (i * 10 - 10))
-                                muertesEdad[i - 1]++;
+                        if (estad) {
+                            numMuertes++;
+                            aux = Integer.parseInt(datAux[2]);
+                            for (int i = 1; i <= 10; i++) {
+                                if (aux <= i * 10 && aux > (i * 10 - 10))
+                                    muertesEdad[i - 1]++;
+                            }
                         }
                         if (muertes) {    //agrego una persona muerta si la bandera es true
                             persona = new Persona(datAux);//almaceno en persona
@@ -227,13 +230,14 @@ class Main {
 
                     if (datAux[20].equals("Confirmado")) //Cuento infectados
                     {
-                        numInfect++;
-                        aux = Integer.parseInt(datAux[2]);
-                        for (int i = 1; i <= 10; i++) {
-                            if (aux <= i * 10 && aux > (i * 10 - 10))
-                                infectEdad[i - 1]++;
+                        if (estad) {
+                            numInfect++;
+                            aux = Integer.parseInt(datAux[2]);
+                            for (int i = 1; i <= 10; i++) {
+                                if (aux <= i * 10 && aux > (i * 10 - 10))
+                                    infectEdad[i - 1]++;
+                            }
                         }
-
                         if (casos) {
                             persona = new Persona(datAux);//almaceno en persona
                             grupo.insertar(persona);
@@ -249,7 +253,7 @@ class Main {
                     length++;
 
                 }
-                    if (caract != 34) //cargo caracter si no es comillas
+                if (caract != 34) //cargo caracter si no es comillas
                 {
                     if (caract == '\n') { // Evito salto de linea
                         fr.read();
@@ -296,7 +300,7 @@ class Main {
 
     }
 
-    public static AvlTree insertCui(Date fecha, String dirDoc) {
+    public static AvlTree insertCui(boolean estad, Date fecha, String dirDoc) {
 
         //Declarar una variable FileReader
         String nombreFichero = dirDoc;
@@ -348,26 +352,28 @@ class Main {
 
                         if (datAux[14].equals("SI")) //Cuento los fallecidos
                         {
-                            numMuertes++;
-                            aux = Integer.parseInt(datAux[2]);
-                            for (int i = 1; i <= 10; i++) {
-                                if (aux <= i * 10 && aux > (i * 10 - 10))
-                                    muertesEdad[i - 1]++;
+                            if (estad) {
+                                numMuertes++;
+                                aux = Integer.parseInt(datAux[2]);
+                                for (int i = 1; i <= 10; i++) {
+                                    if (aux <= i * 10 && aux > (i * 10 - 10))
+                                        muertesEdad[i - 1]++;
+                                }
                             }
-
 
                         }
 
                         if (datAux[20].equals("Confirmado")) //Cuento infectados
                         {
-                            numInfect++;
-                            aux = Integer.parseInt(datAux[2]);
-                            for (int i = 1; i <= 10; i++) {
-                                if (aux <= i * 10 && aux > (i * 10 - 10))
-                                    infectEdad[i - 1]++;
+                            if (estad) {
+                                numInfect++;
+                                aux = Integer.parseInt(datAux[2]);
+                                for (int i = 1; i <= 10; i++) {
+                                    if (aux <= i * 10 && aux > (i * 10 - 10))
+                                        infectEdad[i - 1]++;
+                                }
+
                             }
-
-
                         }
                         if (dt_2.compareTo(dt_1) >= 0) {
                             persona = new Persona(datAux, dt_2);//almaceno en persona
