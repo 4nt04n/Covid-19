@@ -205,8 +205,9 @@ class Main {
                 {
 
                     datAux[count] = id;  //Almaceno ultimo valor
-                    if (datAux[3] == "Meses") {
+                    if (datAux[3].equals("Meses")) {
                         datAux[2] = "0";
+                        datAux[3]="Años";
                     }
 
 
