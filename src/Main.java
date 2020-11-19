@@ -25,6 +25,8 @@ class Main {
         Date dt_1 = objSDF.parse("1900-01-01");
         AvlTree arbol = new AvlTree();
 
+        dirDoc = args[args.length - 1];
+
         for (int i = 0; args.length - 1 > i; i++) { //Control de Args Menu
             parametros = args[i];
             switch (parametros) {
@@ -65,6 +67,12 @@ class Main {
                         System.out.println("Falta los años en -casos_edad años");
                         return;
                     }
+                    if(años=="0" || años.equals(dirDoc))
+                    {
+                        System.out.println("Años no ingresados");
+                        return;
+                    }
+
                     break;
 
                 case "-casos_cui":
@@ -79,13 +87,14 @@ class Main {
 
             }
         }
-        dirDoc = args[args.length - 1];
+
 
         if (args.length == 0) //No envian argumentos
         {
             System.out.println("Faltan Parametros");
             return;
         }
+
 
         if ((pcasos && pmuertes) || (pcasos && cEdad) || (pcasos && cui) || (pmuertes && cui) || (cEdad && cui))//CD + BD + AD + AC + AB  Nos envian mas Parametros de los que van
         {
