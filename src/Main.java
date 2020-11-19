@@ -40,8 +40,8 @@ class Main {
                             n = Integer.parseInt(args[i + 1]);
                         }
                     } catch (Exception e) {
-                        System.out.println("Argumentos mal ingresados");
-                        return;
+
+
                     }
                     break;
                 case "-p_muertes":
@@ -52,8 +52,7 @@ class Main {
                         }
 
                     } catch (Exception e) {
-                        System.out.println("Argumentos mal ingresados");
-                        return;
+
                     }
                     break;
                 case "-casos_edad":
@@ -121,7 +120,7 @@ class Main {
                 if (pilas[i].provincia != null) {
                     System.out.println("\n La provincia de " + pilas[i].provincia + " tiene " + pilas[i].size + " personas infectadas de " + años + " años" + "\n");
                     aux = pilas[i].size;
-                    for (int j = 0; j <= aux; j++) {
+                    for (int j = 0; j < aux; j++) {
                         System.out.println(pilas[i].topAndPop().toString());
                     }
                 }
