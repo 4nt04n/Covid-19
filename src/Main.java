@@ -138,6 +138,8 @@ class Main {
         System.out.println();
 
         if (estad) {
+            if (!cEdad && !pcasos && !pmuertes && !cui)
+            { GrupoProvincias datos = insertP(pcasos, pmuertes, cEdad, años, dirDoc);}
             estad();
         }
 

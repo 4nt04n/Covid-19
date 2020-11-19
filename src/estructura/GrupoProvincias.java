@@ -5,11 +5,11 @@ import java.sql.SQLOutput;
 
 public class GrupoProvincias {
     public int length = 0;
-    private StackPersona[] provincias = new StackPersona[25];
+    private StackPersona[] provincias = new StackPersona[24];
 
     public GrupoProvincias() {
 
-        for (int i = 0; i < 25; i++) {
+        for (int i = 0; i < 24; i++) {
             this.provincias[i] = new StackPersona();
         }
 
@@ -104,12 +104,12 @@ public class GrupoProvincias {
     public StackPersona[] ordenar() {
 
         //  quicksort(this.provincias,0,23);
-        burbuja(this.provincias);
+        sort(this.provincias);
         return this.provincias;
 
     }
     
-    public static void burbuja(StackPersona[] A) {
+    private void sort(StackPersona[] A) {
         int i, j;
         StackPersona aux;
         for (i = 0; i < A.length - 1; i++)

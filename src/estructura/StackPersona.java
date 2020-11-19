@@ -37,12 +37,4 @@ public class StackPersona {
         return persona;
     }
 
-    public int getSize() {
-        return size;
-    }
-
-    public boolean isEmpty() {
-        return cima == null;
-    }
-
 }
